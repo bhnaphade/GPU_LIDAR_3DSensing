@@ -21,7 +21,7 @@
 #endif
 
 #define k 		10
-#define max_LIDAR_dist 	600 //in mm
+#define max_LIDAR_dist 	600 //in cm
 #define radians		M_PI/180
 
 
@@ -86,7 +86,7 @@ int color_patch_pts[1] = { 4 };
 
 int cube_size = 200;
 
-int sc_size = cube_size + 30;
+int sc_size = cube_size;
 
 int halfSc_size = sc_size / 2;
 
@@ -125,16 +125,16 @@ cv::Point patch_pts[1][4];
 
 //Screen points
 
-Mat sc_1 = (cv::Mat_<double>(4, 1) << sc_size, 0, 0, 1);
+Mat sc_1 = (cv::Mat_<double>(4, 1) << 0, 0, sc_size/2, 1);
 
-Mat sc_2 = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size, 1);
+Mat sc_2 = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size/2, 1);
 
-Mat sc_3 = (cv::Mat_<double>(4, 1) << sc_size, sc_size, sc_size, 1);
+Mat sc_3 = (cv::Mat_<double>(4, 1) << sc_size, sc_size, sc_size/2, 1);
 
-Mat sc_4 = (cv::Mat_<double>(4, 1) << sc_size, sc_size, 0, 1);
+Mat sc_4 = (cv::Mat_<double>(4, 1) << 0, sc_size, sc_size/2, 1);
 
 
-Mat cam_eye = (cv::Mat_<double>(3, 1) << 250, 250, 250);
+Mat cam_eye = (cv::Mat_<double>(3, 1) << 250, 150, 450);
 
 Mat org = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
 
@@ -386,8 +386,6 @@ cv::Point2d pointAtAngleDist(cv::Point2d source_pt, float distance, float angle)
 void SENLIDOnSurface(Mat image, rplidar_response_measurement_node_t * LocNodes, int count)
 {	
 	const cv::Point* ptr[1] = { patch_pts[0]};
-	
-	Mat loc_fin_image;
 
 	cv::Point2d target_pt(0, 0);
 	cv::Point2d surface_center(halfSc_size, halfSc_size);
@@ -397,10 +395,11 @@ void SENLIDOnSurface(Mat image, rplidar_response_measurement_node_t * LocNodes, 
 		(halfSc_size*((LocNodes[i].distance_q2/4.0f)/10))/max_LIDAR_dist,
 		(float)((int)(450-((LocNodes[i].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f))%360));
 	
-		Mat d_1 = (cv::Mat_<double>(4, 1) << sc_size, target_pt.x-1, target_pt.y-1, 1);
-		Mat d_2 = (cv::Mat_<double>(4, 1) << sc_size, target_pt.x-1, target_pt.y+1, 1);
-		Mat d_3 = (cv::Mat_<double>(4, 1) << sc_size, target_pt.x+1, target_pt.y-1, 1);
-		Mat d_4 = (cv::Mat_<double>(4, 1) << sc_size, target_pt.x+1, target_pt.y+1, 1);	
+		Mat d_1 = (cv::Mat_<double>(4, 1) << target_pt.x-1, target_pt.y-1, sc_size/2, 1);
+		Mat d_2 = (cv::Mat_<double>(4, 1) << target_pt.x-1, target_pt.y+1, sc_size/2, 1);
+		Mat d_3 = (cv::Mat_<double>(4, 1) << target_pt.x+1, target_pt.y-1, sc_size/2, 1);
+		Mat d_4 = (cv::Mat_<double>(4, 1) << target_pt.x+1, target_pt.y+1, sc_size/2, 1);
+
 
 		patch_pts[0][0] = transform(d_1);
 		patch_pts[0][1] = transform(d_2);
