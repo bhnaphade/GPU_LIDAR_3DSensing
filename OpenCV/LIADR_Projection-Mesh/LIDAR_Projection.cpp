@@ -8,20 +8,23 @@
 
 #include <iostream> 
 #include <math.h>
-#include <csignal
+#include <csignal>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <unistd.h>
 
 #define k 							10
-#define max_LIDAR_dist 				600 //in cm
 #define radians						M_PI/180
 
-#define cubeSize    				230
+#define cubeSize    				2000
+#define maxDist 			    	(cubeSize/2)
+#define minDist                     10
 #define DEBUG_CODE  				0
 
-#define numOfDistSensorLayers		32
-#deifne numOfAnglesForDistInfo		360
+#define numOfDistSensorLayers		10
+#define numOfAnglesForDistInfo		360
+#define measuredDist                (cubeSize/2)
 
 using namespace cv;
 using namespace std;
@@ -52,7 +55,7 @@ Mat scr2 = (cv::Mat_<float>(4, 1) << scrSize, 0, scrSize - 30, 1);
 Mat scr3 = (cv::Mat_<float>(4, 1) << scrSize, scrSize, scrSize - 30, 1);
 Mat scr4 = (cv::Mat_<float>(4, 1) << scrSize, scrSize, 0, 1);
 
-Mat camPosition = (cv::Mat_<float>(3, 1) << 350, 300, 250);
+Mat camPosition = (cv::Mat_<float>(3, 1) << cubeSize+150, cubeSize+75, cubeSize+75);
 
 Mat org = (cv::Mat_<float>(4, 1) << 0, 0, 0, 1);
 
@@ -86,7 +89,7 @@ void lidGetScanData(int*);
 void lidDistOnSurface(Mat, int *);
 
 
-static inline void delay(_word_size_t ms){
+static inline void delay(unsigned int ms){
     while (ms>=1000){
         usleep(1000*1000);
         ms-=1000;
@@ -106,7 +109,7 @@ int main()
 	int lidarScanData[numOfAnglesForDistInfo][numOfDistSensorLayers];
     
     drawAxes(preFinalImage);
-    drawCube(preFinalImage);
+    //drawCube(preFinalImage);
     //drawScreen(preFinalImage);
     //imshow("cube",preFinalImage);
     //cv::flip(preFinalImage, finalImage, 0);
@@ -121,9 +124,9 @@ int main()
 		lidGetScanData(&lidarScanData[0][0]);
 		//project in cube
 		lidDistOnSurface(preFinalImage, &lidarScanData[0][0]);
-		
-		cv::flip(preFinalImage, finalImage, 0);
-		imshow("Sensor Data Projection", finalImage);
+		drawCube(preFinalImage);
+		//cv::flip(preFinalImage, finalImage, 0);
+		imshow("Sensor Data Projection", preFinalImage);
     }
     waitKey(0);
     return 0;
@@ -220,17 +223,34 @@ cv::Point2d pointAtAngleDist(cv::Point2d source_pt, float distance, float angle)
 
 void lidGetScanData(int* scanData)
 {
-	for(unsigned int sensor=0;i<numOfDistSensorLayers;sensor++)
+	for(unsigned int sensor=0;sensor<numOfDistSensorLayers/2;sensor++)
 	{
 		for(unsigned int angle=0;angle<numOfAnglesForDistInfo;angle++)
 		{
-			scanData[sensor][angle] = 80;
+			scanData[sensor*numOfAnglesForDistInfo+angle] = 
+			  (maxDist-(10+(((maxDist-minDist)/numOfDistSensorLayers)*sensor)));
+		}
+	}
+	
+	for(unsigned int sensor=numOfDistSensorLayers/2;sensor<numOfDistSensorLayers;sensor++)
+	{
+		for(unsigned int angle=0;angle<numOfAnglesForDistInfo;angle++)
+		{
+			scanData[sensor*numOfAnglesForDistInfo+angle] = 
+			  maxDist - (maxDist-(10+(((maxDist-minDist)/numOfDistSensorLayers)*sensor)));
 		}
 	}
 }
 
 void lidDistOnSurface(Mat image, int* scanData)
 {
+
+    Mat d_1 = (cv::Mat_<float>(4, 1) << 0,0,0,1);
+	Mat d_2 = (cv::Mat_<float>(4, 1) << 0,0,0,1);
+	Mat d_3 = (cv::Mat_<float>(4, 1) << 0,0,0,1);
+	Mat d_4 = (cv::Mat_<float>(4, 1) << 0,0,0,1);
+	Mat tragetPt3D = (cv::Mat_<int>(4, 1) << 0,0,0,1);
+	
 	const cv::Point* ptr[1] = { patch_pts[0]};
 	int angle = 0;
 	int sensor = 0;
@@ -241,34 +261,38 @@ void lidDistOnSurface(Mat image, int* scanData)
 	cv::Point surfaceCenter(lidProjPlaneSize/2, lidProjPlaneSize/2);
 	cv::Point targetPt(0, 0);
 	cv::Point lastTransformedCoordinate(0,0);
-	int distInLayers = cubeSize / numOfDistSensorLayers;
 	
+	int distInLayers = cubeSize / (numOfDistSensorLayers-1);
+	
+	angle = 0;
 	/*Transform Angle = 0 data for all sensors*/
 	for(sensor=0;sensor<numOfDistSensorLayers;sensor++)
 	{
 		targetPt = pointAtAngleDist(surfaceCenter,
-									scanData[sensor][angle],
+									scanData[sensor*numOfAnglesForDistInfo+angle],
 									angle);
 		
-		Mat d_1 = (cv::Mat_<int>(4, 1) << targetPt.x-1, targetPt.y-1, distInLayers*sensor, 1);
-		Mat d_2 = (cv::Mat_<int>(4, 1) << targetPt.x-1, targetPt.y+1, distInLayers*sensor, 1);
-		Mat d_3 = (cv::Mat_<int>(4, 1) << targetPt.x+1, targetPt.y-1, distInLayers*sensor, 1);
-		Mat d_4 = (cv::Mat_<int>(4, 1) << targetPt.x+1, targetPt.y+1, distInLayers*sensor, 1);
+		/*d_1 = (cv::Mat_<float>(4, 1) << targetPt.x-1, targetPt.y-1, distInLayers*sensor, 1);
+		d_2 = (cv::Mat_<float>(4, 1) << targetPt.x-1, targetPt.y+1, distInLayers*sensor, 1);
+		d_3 = (cv::Mat_<float>(4, 1) << targetPt.x+1, targetPt.y-1, distInLayers*sensor, 1);
+		d_4 = (cv::Mat_<float>(4, 1) << targetPt.x+1, targetPt.y+1, distInLayers*sensor, 1);
 
-		patch_pts[0][0] = transform(d_1);
-		patch_pts[0][1] = transform(d_2);
-		patch_pts[0][2] = transform(d_3);
-		patch_pts[0][3] = transform(d_4);
+		patch_pts[0][0] = transform(d_1,image.rows);
+		patch_pts[0][1] = transform(d_2,image.rows);
+		patch_pts[0][2] = transform(d_3,image.rows);
+		patch_pts[0][3] = transform(d_4,image.rows);
+		cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 255, 255), 8);*/
 		
-		targetPt = transform(targetPt);
+		tragetPt3D = (cv::Mat_<float>(4, 1) << targetPt.x, targetPt.y, distInLayers*sensor, 1);
+		
+		targetPt = transform(tragetPt3D,image.rows);
 		
 		prevAngleTransformedCoordinates[sensor] = targetPt;
 		angleZeroTransformedCoordinates[sensor] = targetPt;
 		
-		cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 255, 255), 8);
 		if(sensor >0)
 		{
-			line(image, lastTransformedCoordinate, targetPt, Scalar(0, 255, 255), 2, 8);
+			line(image, lastTransformedCoordinate, targetPt, Scalar(0, (255+(numOfDistSensorLayers*10))%255, 255), 1, 8);
 		}
 		
 		lastTransformedCoordinate = targetPt;
@@ -280,35 +304,43 @@ void lidDistOnSurface(Mat image, int* scanData)
 		for(sensor=0;sensor<numOfDistSensorLayers;sensor++)
 		{
 			targetPt = pointAtAngleDist(surfaceCenter,
-										 scanData[sensor][angle],
+										 scanData[sensor*numOfAnglesForDistInfo+angle],
 										 angle);
 			
-			Mat d_1 = (cv::Mat_<int>(4, 1) << targetPt.x-1, targetPt.y-1, distInLayers*sensor, 1);
-			Mat d_2 = (cv::Mat_<int>(4, 1) << targetPt.x-1, targetPt.y+1, distInLayers*sensor, 1);
-			Mat d_3 = (cv::Mat_<int>(4, 1) << targetPt.x+1, targetPt.y-1, distInLayers*sensor, 1);
-			Mat d_4 = (cv::Mat_<int>(4, 1) << targetPt.x+1, targetPt.y+1, distInLayers*sensor, 1);
+			/*d_1 = (cv::Mat_<float>(4, 1) << targetPt.x-1, targetPt.y-1, distInLayers*sensor, 1);
+			d_2 = (cv::Mat_<float>(4, 1) << targetPt.x-1, targetPt.y+1, distInLayers*sensor, 1);
+			d_3 = (cv::Mat_<float>(4, 1) << targetPt.x+1, targetPt.y-1, distInLayers*sensor, 1);
+			d_4 = (cv::Mat_<float>(4, 1) << targetPt.x+1, targetPt.y+1, distInLayers*sensor, 1);
 
-			patch_pts[0][0] = transform(d_1);
-			patch_pts[0][1] = transform(d_2);
-			patch_pts[0][2] = transform(d_3);
-			patch_pts[0][3] = transform(d_4);
+			patch_pts[0][0] = transform(d_1,image.rows);
+			patch_pts[0][1] = transform(d_2,image.rows);
+			patch_pts[0][2] = transform(d_3,image.rows);
+			patch_pts[0][3] = transform(d_4,image.rows);
+			cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 255, 255), 8);*/
 			
-			targetPt = transform(targetPt);
-
-			cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 255, 255), 8);
+			tragetPt3D = (cv::Mat_<float>(4, 1) << targetPt.x, targetPt.y, distInLayers*sensor, 1);
 			
-			line(image, prevTransformedCoordinates[sensor], targetPt, Scalar(0, 255, 255), 2, 8);
+			targetPt = transform(tragetPt3D,image.rows);
+			
+			line(image, prevAngleTransformedCoordinates[sensor], targetPt, Scalar(0, 255, 255), 1, 8);
+			
 			if(sensor > 0)
 			{
-				line(image, lastTransformedCoordinate, targetPt, Scalar(0, 255, 255), 2, 8);
+				line(image, lastTransformedCoordinate, targetPt, Scalar(0, (255+(numOfDistSensorLayers*10))%255, 255), 1, 8);
 			}
 			
-			prevTransformedCoordinates[sensor] = targetPt;
+			prevAngleTransformedCoordinates[sensor] = targetPt;
 			
 			lastTransformedCoordinate = targetPt;
 		}
 		
 		lastTransformedCoordinate.x = 0;
 		lastTransformedCoordinate.y = 0;
+	}
+	
+	for(sensor=0;sensor<numOfDistSensorLayers;sensor++)
+	{
+	    line(image, prevAngleTransformedCoordinates[sensor], 
+	        angleZeroTransformedCoordinates[sensor], Scalar(0, 255, 255), 1, 8);
 	}
 }
