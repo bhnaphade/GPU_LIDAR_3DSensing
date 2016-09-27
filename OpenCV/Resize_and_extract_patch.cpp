@@ -15,7 +15,7 @@ int main(void)
 {
 	Mat frame;
 	Mat updated_frame;
-	Rect rec(10,10, 50, 50);
+	Rect rec(70,70, 100, 100);
 
 	vector<int> compression_params;
 	//vector that stores the compression parameters of the image
@@ -37,7 +37,7 @@ int main(void)
 		{
 			photocount++;// increment image number for each capture
 			imshow("Captured", frame);
-			resize(frame, updated_frame, Size(100, 100), 0, 0, INTER_CUBIC);
+			resize(frame, updated_frame, Size(200, 200), 0, 0, INTER_CUBIC);
 			imshow("resized frame", updated_frame);
 			Mat Roi = updated_frame(rec);
 			imshow("Patch", Roi);
