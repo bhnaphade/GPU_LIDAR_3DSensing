@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(Screen_decoration)
 find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 add_executable(Screen_decoration screen_deco.cpp)
 target_link_libraries(Screen_decoration ${OpenCV_LIBS})
 target_link_libraries(Screen_decoration m)
