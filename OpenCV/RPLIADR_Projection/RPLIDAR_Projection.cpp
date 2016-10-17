@@ -1,3 +1,11 @@
+/********************************************************************
+* Program Name : RPLIDAR_Projection.cpp                             *
+* Description  : Project RPLIDAR distance data on Projection plane  *
+* Author       : Amit Pachore                                       *
+* Date         : Oct 15, 2016                                       *
+* Notes        : Used screen_deco.cpp for projection in world       *
+*                coordinate system. Yet to modularise the code      *
+*********************************************************************/
 #include <iostream> 
 #include <math.h>
 #include <opencv2/opencv.hpp>
