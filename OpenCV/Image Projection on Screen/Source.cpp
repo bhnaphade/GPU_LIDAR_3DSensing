@@ -14,7 +14,7 @@ using cv::Mat;
 using namespace cv;
 
 int color_patch_pts[1] = { 4 };
-int sc_size = cube_size+30;
+int sc_size = cube_size + 30;
 int x_off = 320, y_off = 320;
 
 //World coordinate axes
@@ -63,7 +63,7 @@ void draw_cube(Mat);
 void draw_screen(Mat);
 void surface_decoration(Mat);
 Mat camera();
-void image_project(Mat,Mat);
+void image_project(Mat, Mat);
 
 int main()
 {
@@ -196,20 +196,22 @@ void surface_decoration(Mat image)
 Mat camera()
 {
 	int key = 0;
-	Mat frame, resize_frame;
+	Mat frame, resize_frame,dst,tmp;
 	VideoCapture cap(0); //open camera no.0  0=internal 1=external
 
 	while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
 	{
 		cap >> frame; //save captured image to frame variable
 		imshow("Camera", frame); //show image on window named Camera
-
+		tmp = frame;
+		dst = tmp;
+		pyrDown(tmp, dst, Size(tmp.cols / 2, tmp.rows / 2));
 		if (key == 'c')
 		{
-			imshow("Captured", frame);
-			resize(frame, resize_frame, Size(cube_size, cube_size), 0, 0, INTER_CUBIC);
-			imshow("resized frame", resize_frame);
-			return resize_frame;
+			//imshow("Captured", frame);
+			//resize(frame, resize_frame, Size(cube_size, cube_size), 0, 0, INTER_CUBIC);
+			imshow("resized frame", dst);
+			return dst;
 		}
 	}
 }
@@ -225,70 +227,59 @@ void image_project(Mat resize_image, Mat orig_image)
 	Mat temp = Mat::zeros(500, 500, CV_8UC3);
 	Mat warp_mat(2, 3, CV_32FC1);
 
-	
 	int rows = resize_image.rows;
 	int columns = resize_image.cols;
-
 	Point2f srcTri[3];
-
 	srcTri[0].x = 0; srcTri[0].y = 0;
 	srcTri[1].x = cube_size; srcTri[2].y = 0;
 	srcTri[2].x = 0; srcTri[2].y = cube_size;
-
 	warp_mat = getAffineTransform(srcTri, dstTri);
 	warpAffine(resize_image, temp, warp_mat, temp.size());
 	cv::flip(temp, temp_fin, 0);
-
 	//Mat left(temp, Rect(dstTri[2].x-50, dstTri[2].y, s_r_m.width, s_r_m.height));
 	//Mat right(orig_image, Rect(dstTri[2].x-20, dstTri[2].y-20, s_r_m.width, s_r_m.height));
 	//left.copyTo(right);
-
 	//Mat left(orig_image, Rect(101, 101, s_r_m.width, s_r_m.height));
 	//resize_image.copyTo(left);
-
 	imshow("Test", temp_fin);
-
 #endif
 
 #if 0
 	Mat image_s = Mat::zeros(500, 500, CV_8UC3);
-	line(image_s, Point(100,100), Point(100,230), Scalar(110, 220, 0), 2, 8);
+	line(image_s, Point(100, 100), Point(100, 230), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(100, 230), Point(230, 230), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(230, 230), Point(230, 100), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(230, 100), Point(100, 100), Scalar(110, 220, 0), 2, 8);
-
 	line(image_s, Point(70, 70), Point(70, 260), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(70, 260), Point(260, 260), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(260, 260), Point(260, 70), Scalar(110, 220, 0), 2, 8);
 	line(image_s, Point(260, 70), Point(70, 70), Scalar(110, 220, 0), 2, 8);
-
 	Mat left(image_s, Rect(101, 101, s_r_m.width, s_r_m.height));
 	resize_image.copyTo(left);
-
 	imshow("Test", image_s);
 #endif
 
-int y_min = 0, z_min = 0, y_max = sc_size - 30, z_max = sc_size - 30;
-Mat three_d_pt = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size - 30, 1);
+	int y_min = 0, z_min = 0, y_max = sc_size - 30, z_max = sc_size - 30;
+	Mat three_d_pt = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size - 30, 1);
 
-for (unsigned int i = 0; i <z_max; i++)
-{
-	three_d_pt.at<double>(1, 0) = 0;
-	
-	for (unsigned int j = 0; j < y_max; j++)
+	for (unsigned int i = 0; i <z_max; i++)
 	{
-		Mat temp = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
-		temp = three_d_pt;
-		//cout << "i=" << temp.at<double>(1,0)<< "j=" << temp.at<double>(2, 0) << endl;
-		temp.at<double>(1, 0) += 1;
+		three_d_pt.at<double>(1, 0) = 0;
 
-		cv::Point two_d_pt = transform(temp);
-		Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
+		for (unsigned int j = 0; j < y_max; j++)
+		{
+			Mat temp = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
+			temp = three_d_pt;
+			//cout << "i=" << temp.at<double>(1,0)<< "j=" << temp.at<double>(2, 0) << endl;
+			temp.at<double>(1, 0) += 1;
 
-		orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y))= colour;
-		orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y))= colour;
-		orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y))= colour;
+			cv::Point two_d_pt = transform(temp);
+			Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
+
+			orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+			orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+			orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+		}
+		three_d_pt.at<double>(2, 0) = three_d_pt.at<double>(2, 0) - 1;
 	}
-	three_d_pt.at<double>(2, 0) = three_d_pt.at<double>(2,0) - 1;
-}
 }
