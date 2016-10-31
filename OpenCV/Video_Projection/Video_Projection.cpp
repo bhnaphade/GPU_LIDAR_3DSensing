@@ -55,10 +55,8 @@ double phi = (acos(cam_eye.at<double>(2, 0) / rho));
 double proj_plane_dist = 200;
 
 // Transformation matrix
-Mat trans_mat = (cv::Mat_<double>(4, 4) << -sin(thetha), cos(thetha), 0.0, 0.0,
-     -cos(phi) * cos(thetha), -cos(phi) * sin(thetha), sin(phi), 0.0,
-     -sin(phi) * cos(thetha), -sin(phi) * cos(thetha), -cos(phi), rho,
-     0.0, 0.0, 0.0, 1.0);
+Mat trans_mat = (cv::Mat_<double>(4, 4) << -sin(thetha), cos(thetha), 0.0, 0.0, -cos(phi) * cos(thetha), -cos(phi) * sin(thetha), 
+                sin(phi), 0.0, -sin(phi) * cos(thetha), -sin(phi) * cos(thetha), -cos(phi), rho, 0.0, 0.0, 0.0, 1.0);
 
 cv::Point2d transform(Mat);
 void draw_cube(Mat);
@@ -95,7 +93,7 @@ int main()
      Mat frame, resize_frame, dst, tmp;
      VideoCapture cap(0); //open camera no.0  0=internal 1=external
      cv::VideoWriter writer;
-     string filename = "/home/ubuntu/Project_OpenCV/my_video.avi";
+     string filename = "/home/ubuntu/Project_OpenCV/Video_Projection/my_video.avi";
 
      int fcc = CV_FOURCC('D', 'I', 'V', '3');
 
@@ -104,32 +102,32 @@ int main()
      cv::Size framesize(cap.get(CV_CAP_PROP_FRAME_WIDTH), cap.get(CV_CAP_PROP_FRAME_HEIGHT));
 
      writer = VideoWriter(filename, fcc, fps, framesize);
-     if (!writer.isOpened())
-     {
+    if (!writer.isOpened())
+    {
          cout << "Error opening file for write" << endl;
          getchar();
          return -1;
-     }
+    }
 
 
-     while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
-     {
+    while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
+    {
          cap >> frame; //save captured image to frame variable
-         imshow("Camera", frame); //show image on window named Camera
+         //imshow("Camera", frame); //show image on window named Camera
          tmp = frame;
          dst = tmp;
          pyrDown(tmp, dst, Size(tmp.cols / 2, tmp.rows / 2));
          //if (key == 'c')
-         {
+        {
              //imshow("Captured", frame);
              //resize(frame, resize_frame, Size(cube_size, cube_size), 0, 0, INTER_CUBIC);
-             imshow("resized frame", dst);
+            // imshow("resized frame", dst);
              image_project(dst, image);
              cv::flip(image, fin_image, 0);
              imshow("Image", fin_image);
              //return dst;
-         }
-     }
+        }
+    }
 
 
      waitKey(0);
@@ -203,18 +201,18 @@ void draw_screen(Mat image)
 
 void surface_decoration(Mat image)
 {
-     const cv::Point* ptr[1] = \{ patch_pts[0] \};
+     const cv::Point* ptr[1] = { patch_pts[0] };
 
      if (k > cube_size)
-     {
+    {
          cout << "Decoration larger than cube size, please change value of k" << endl;
-     }
+    }
      else if (k == cube_size)
-     {
+    {
          cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 0, 255), 8);
-     }
+    }
      else
-     {
+    {
          double offset = (cube_size - k) / 2;
 
          //Color patch decoration points
@@ -229,7 +227,7 @@ void surface_decoration(Mat image)
          patch_pts[0][3] = transform(d_4);
 
          cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 0, 255), 8);
-     }
+    }
 }
 
 Mat camera()
@@ -238,7 +236,7 @@ Mat camera()
      Mat frame, resize_frame,dst,tmp;
      VideoCapture cap(0); //open camera no.0  0=internal 1=external
      cv::VideoWriter writer;
-     string filename = "D:\\my_video.avi";
+     string filename = "/home/ubuntu/Project_OpenCV/my_video.avi";
 
      int fcc = CV_FOURCC('D', 'I', 'V', '3');
 
@@ -248,28 +246,28 @@ Mat camera()
 
      writer = VideoWriter(filename, fcc, fps, framesize);
      /*if (!writer.isOpened())
-     {
+    \{
          cout << "Error opening file for write" << endl;
          getchar();
          return -1;
-     }*/
+    \}*/
 
 
      while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
-     {
+    {
          cap >> frame; //save captured image to frame variable
          imshow("Camera", frame); //show image on window named Camera
          tmp = frame;
          dst = tmp;
          pyrDown(tmp, dst, Size(tmp.cols / 2, tmp.rows / 2));
          if (key == 'c')
-         {
+        {
              //imshow("Captured", frame);
              //resize(frame, resize_frame, Size(cube_size, cube_size), 0, 0, INTER_CUBIC);
              imshow("resized frame", dst);
              return dst;
-         }
-     }
+        }
+    }
 }
 
 void image_project(Mat resize_image, Mat orig_image)
@@ -319,11 +317,11 @@ void image_project(Mat resize_image, Mat orig_image)
      Mat three_d_pt = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size - 30, 1);
 
      for (unsigned int i = 0; i <z_max; i++)
-     {
+    {
          three_d_pt.at<double>(1, 0) = 0;
 
          for (unsigned int j = 0; j < y_max; j++)
-         {
+        {
              Mat temp = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
              temp = three_d_pt;
              //cout << "i=" << temp.at<double>(1,0)<< "j=" << temp.at<double>(2, 0) << endl;
@@ -333,9 +331,9 @@ void image_project(Mat resize_image, Mat orig_image)
              Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
 
              orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-             orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-             orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-         }
+             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+        }
          three_d_pt.at<double>(2, 0) = three_d_pt.at<double>(2, 0) - 1;
-     }
+    }
 }
