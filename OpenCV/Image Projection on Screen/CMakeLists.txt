@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project(Image_Projection)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(cv_image_projection image_projection.cpp)
+target_link_libraries(cv_image_projection ${OpenCV_LIBS})
+target_link_libraries(cv_image_projection m)

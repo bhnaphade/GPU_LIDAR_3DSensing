@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ubuntu/GPU_LIDAR_3DSensing/RPLIDAR/simple_grabber.cpp
+stdio.h
+-
+stdlib.h
+-
+rplidar.h
+/home/ubuntu/GPU_LIDAR_3DSensing/RPLIDAR/rplidar.h
+Windows.h
+-
+unistd.h
+-
+
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar.h
+rptypes.h
+/home/ubuntu/rplidar/sdk/sdk/include/rptypes.h
+rplidar_protocol.h
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_protocol.h
+rplidar_cmd.h
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_cmd.h
+rplidar_driver.h
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_driver.h
+
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_cmd.h
+rplidar_protocol.h
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_protocol.h
+
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_driver.h
+
+/home/ubuntu/rplidar/sdk/sdk/include/rplidar_protocol.h
+
+/home/ubuntu/rplidar/sdk/sdk/include/rptypes.h
+stdint.h
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/c++       CMakeFiles/lid_simple_grabber.dir/simple_grabber.cpp.o  -o lid_simple_grabber -rdynamic /home/ubuntu/rplidar/sdk/output/Linux/Release/librplidar_sdk.a -lpthread 

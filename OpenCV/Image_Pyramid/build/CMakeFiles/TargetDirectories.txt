@@ -1,0 +1,2 @@
+/home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Image_Pyramid/build/CMakeFiles/cv_image_pyramid.dir
+/home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Image_Pyramid/build/CMakeFiles/cv_video_pyramid.dir

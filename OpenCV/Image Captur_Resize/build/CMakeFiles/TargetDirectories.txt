@@ -1,0 +1,1 @@
+/home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Image Captur_Resize/build/CMakeFiles/cv_resize.dir

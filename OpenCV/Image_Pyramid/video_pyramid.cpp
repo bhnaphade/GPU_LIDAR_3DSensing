@@ -13,7 +13,7 @@ int main(int, char**)
 	Mat edges;
 	namedWindow("edges", 1);
 
-	string filename = "D:\my_video.avi";
+	string filename = "../my_video.avi";
 
 	int fcc = CV_FOURCC('D','I','V','3');
 
