@@ -93,7 +93,7 @@ int main()
      Mat frame, resize_frame, dst, tmp;
      VideoCapture cap(0); //open camera no.0  0=internal 1=external
      cv::VideoWriter writer;
-     string filename = "/home/ubuntu/Project_OpenCV/Video_Projection/my_video.avi";
+     string filename = "../my_video.avi";
 
      int fcc = CV_FOURCC('D', 'I', 'V', '3');
 
