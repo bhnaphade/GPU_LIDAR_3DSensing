@@ -1,11 +1,12 @@
 #include <iostream> 
 #include <math.h>
 #include <string.h>
+#include <fstream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#define k 10
+#define k 	  10
 #define cube_size 200
 
 using std::cout;
@@ -48,15 +49,23 @@ Mat sc_4 = (cv::Mat_<double>(4, 1) << sc_size, sc_size - 30, 0, 1);
 Mat cam_eye = (cv::Mat_<double>(3, 1) << 300, 300, 250);
 Mat org = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
 
-double rho = sqrt((cam_eye.at<double>(0, 0)*cam_eye.at<double>(0, 0)) + (cam_eye.at<double>(1, 0)*cam_eye.at<double>(1, 0)) + (cam_eye.at<double>(2, 0)*cam_eye.at<double>(2, 0)));
-double thetha = (acos(cam_eye.at<double>(0, 0) / sqrt((cam_eye.at<double>(0, 0) * cam_eye.at<double>(0, 0)) + (cam_eye.at<double>(1, 0) * cam_eye.at<double>(1, 0)))));
+double rho = sqrt((cam_eye.at<double>(0, 0)*cam_eye.at<double>(0, 0)) + 
+		          (cam_eye.at<double>(1, 0)*cam_eye.at<double>(1, 0)) +
+		          (cam_eye.at<double>(2, 0)*cam_eye.at<double>(2, 0)));
+
+double thetha = (acos(cam_eye.at<double>(0, 0) / 
+		              sqrt((cam_eye.at<double>(0, 0) * cam_eye.at<double>(0, 0)) + 
+            			   (cam_eye.at<double>(1, 0) * cam_eye.at<double>(1, 0)))));
+
 double phi = (acos(cam_eye.at<double>(2, 0) / rho));
 
 double proj_plane_dist = 200;
 
 // Transformation matrix
-Mat trans_mat = (cv::Mat_<double>(4, 4) << -sin(thetha), cos(thetha), 0.0, 0.0, -cos(phi) * cos(thetha), -cos(phi) * sin(thetha), 
-                sin(phi), 0.0, -sin(phi) * cos(thetha), -sin(phi) * cos(thetha), -cos(phi), rho, 0.0, 0.0, 0.0, 1.0);
+Mat trans_mat = (cv::Mat_<double>(4, 4) << -sin(thetha), cos(thetha), 0.0, 0.0, 
+					   -cos(phi) * cos(thetha), -cos(phi) * sin(thetha), sin(phi), 0.0, 
+					   -sin(phi) * cos(thetha), -sin(phi) * cos(thetha), -cos(phi), rho, 
+					   0.0, 0.0, 0.0, 1.0);
 
 cv::Point2d transform(Mat);
 void draw_cube(Mat);
@@ -64,6 +73,8 @@ void draw_screen(Mat);
 void surface_decoration(Mat);
 Mat camera();
 void image_project(Mat, Mat);
+
+vector<cv::Point> transformed_coordinates;
 
 int main()
 {
@@ -95,28 +106,32 @@ int main()
      cv::VideoWriter writer;
      string filename = "../my_video.avi";
 
-     int fcc = CV_FOURCC('D', 'I', 'V', '3');
+     int fcc = CV_FOURCC('M', 'J', 'P', 'G');
 
-     int fps = 80;
+     int fps = 30;
 
      cv::Size framesize(cap.get(CV_CAP_PROP_FRAME_WIDTH), cap.get(CV_CAP_PROP_FRAME_HEIGHT));
 
-     writer = VideoWriter(filename, fcc, fps, framesize);
+    /* writer = VideoWriter(filename, fcc, fps, framesize);
     if (!writer.isOpened())
     {
          cout << "Error opening file for write" << endl;
          getchar();
          return -1;
-    }
+    }*/
+    
+    //  cout << framesize << endl;
 
-
-    while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
+    while (waitKey(1)) //Run Infinite
     {
          cap >> frame; //save captured image to frame variable
          //imshow("Camera", frame); //show image on window named Camera
          tmp = frame;
          dst = tmp;
          pyrDown(tmp, dst, Size(tmp.cols / 2, tmp.rows / 2));
+         
+        //cout << dst.cols << "," << dst.rows << endl;
+         
          //if (key == 'c')
         {
              //imshow("Captured", frame);
@@ -132,20 +147,6 @@ int main()
 
      waitKey(0);
      return 0;
-}
-
-cv::Point2d transform(Mat threed_mat)
-{
-     Mat cam_view_3d = trans_mat * threed_mat;
-
-     cv::Point2d twod_pt(0, 0);
-     twod_pt.x = proj_plane_dist * cam_view_3d.at<double>(0, 0) / cam_view_3d.at<double>(2, 0);
-     twod_pt.x += x_off;
-
-     twod_pt.y = proj_plane_dist * cam_view_3d.at<double>(1, 0) / cam_view_3d.at<double>(2, 0);
-     twod_pt.y += y_off;
-
-     return twod_pt;
 }
 
 void draw_cube(Mat image)
@@ -167,7 +168,6 @@ void draw_cube(Mat image)
      line(image, Point(cb6_2d.x, cb6_2d.y), Point(cb4_2d.x, cb4_2d.y), Scalar(110, 220, 0), 2, 8);
      line(image, Point(cb6_2d.x, cb6_2d.y), Point(cb7_2d.x, cb7_2d.y), Scalar(110, 220, 0), 2, 8);
      line(image, Point(cb7_2d.x, cb7_2d.y), Point(cb3_2d.x, cb3_2d.y), Scalar(110, 220, 0), 2, 8);
-
 }
 
 void draw_screen(Mat image)
@@ -199,6 +199,70 @@ void draw_screen(Mat image)
      line(image, Point(sc4_2d.x, sc4_2d.y), Point(sc1_2d.x, sc1_2d.y), Scalar(110, 220, 0), 2, 8);
 }
 
+cv::Point2d transform(Mat threed_mat)
+{
+     Mat cam_view_3d = trans_mat * threed_mat;
+
+     cv::Point2d twod_pt(0, 0);
+     twod_pt.x = proj_plane_dist * cam_view_3d.at<double>(0, 0) / cam_view_3d.at<double>(2, 0);
+     twod_pt.x += x_off;
+
+     twod_pt.y = proj_plane_dist * cam_view_3d.at<double>(1, 0) / cam_view_3d.at<double>(2, 0);
+     twod_pt.y += y_off;
+
+     return twod_pt;
+}
+
+void image_project(Mat resize_image, Mat orig_image)
+{
+
+     //fstream transmformed_coordinates_file;
+     //transmformed_coordinates_file.open ("../transmformed_coordinates_file.txt", std::fstream::out | fstream::app);
+     
+     /*if (!transmformed_coordinates_file.is_open())
+     {
+        cout << "Unable to open file" << endl;
+        exit(0);
+     }*/
+     
+     Size s_r_m = resize_image.size();             //resize_image is a 3 channel image
+
+     int y_min = 0, z_min = 0, y_max = sc_size - 30, z_max = sc_size - 30;
+     Mat three_d_pt = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size - 30, 1);
+
+     for (unsigned int i = 0; i <z_max; i++)
+    {
+         three_d_pt.at<double>(1, 0) = 0;
+
+         for (unsigned int j = 0; j < y_max; j++)
+        {
+             Mat temp = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
+             temp = three_d_pt;
+             //cout << "i=" << temp.at<double>(1,0)<< "j=" << temp.at<double>(2, 0) << endl;
+             temp.at<double>(1, 0) += 1;
+
+             cv::Point two_d_pt = transform(temp);
+             
+             //transmformed_coordinates_file << two_d_pt.x <<endl;
+             
+             //transmformed_coordinates_file << two_d_pt.y <<endl;
+	     	
+             Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
+
+             orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
+        }
+         three_d_pt.at<double>(2, 0) = three_d_pt.at<double>(2, 0) - 1;
+    }
+    
+    //transmformed_coordinates_file << "********************"<<endl;
+     
+     //transmformed_coordinates_file.close();
+}
+
+
+/*
 void surface_decoration(Mat image)
 {
      const cv::Point* ptr[1] = { patch_pts[0] };
@@ -229,7 +293,8 @@ void surface_decoration(Mat image)
          cv::fillPoly(image, ptr, color_patch_pts, 1, Scalar(0, 0, 255), 8);
     }
 }
-
+*/
+/*
 Mat camera()
 {
      int key = 0;
@@ -245,12 +310,13 @@ Mat camera()
      cv::Size framesize(cap.get(CV_CAP_PROP_FRAME_WIDTH), cap.get(CV_CAP_PROP_FRAME_HEIGHT));
 
      writer = VideoWriter(filename, fcc, fps, framesize);
-     /*if (!writer.isOpened())
-    \{
+    if (!writer.isOpened())
+    {
          cout << "Error opening file for write" << endl;
          getchar();
+
          return -1;
-    \}*/
+    }
 
 
      while ((key = waitKey(30)) != 27) //wait 30 milliseconds and check for esc key
@@ -269,71 +335,4 @@ Mat camera()
         }
     }
 }
-
-void image_project(Mat resize_image, Mat orig_image)
-{
-     Size s_r_m = resize_image.size();             //resize_image is a 3 channel image
-
-#if 0
-     s_r_m.width = 170;
-     s_r_m.height = 170;
-     Mat temp_fin = Mat::zeros(500, 500, CV_8UC3);
-     Mat temp = Mat::zeros(500, 500, CV_8UC3);
-     Mat warp_mat(2, 3, CV_32FC1);
-
-     int rows = resize_image.rows;
-     int columns = resize_image.cols;
-     Point2f srcTri[3];
-     srcTri[0].x = 0; srcTri[0].y = 0;
-     srcTri[1].x = cube_size; srcTri[2].y = 0;
-     srcTri[2].x = 0; srcTri[2].y = cube_size;
-     warp_mat = getAffineTransform(srcTri, dstTri);
-     warpAffine(resize_image, temp, warp_mat, temp.size());
-     cv::flip(temp, temp_fin, 0);
-     //Mat left(temp, Rect(dstTri[2].x-50, dstTri[2].y, s_r_m.width, s_r_m.height));
-     //Mat right(orig_image, Rect(dstTri[2].x-20, dstTri[2].y-20, s_r_m.width, s_r_m.height));
-     //left.copyTo(right);
-     //Mat left(orig_image, Rect(101, 101, s_r_m.width, s_r_m.height));
-     //resize_image.copyTo(left);
-     imshow("Test", temp_fin);
-#endif
-
-#if 0
-     Mat image_s = Mat::zeros(500, 500, CV_8UC3);
-     line(image_s, Point(100, 100), Point(100, 230), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(100, 230), Point(230, 230), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(230, 230), Point(230, 100), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(230, 100), Point(100, 100), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(70, 70), Point(70, 260), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(70, 260), Point(260, 260), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(260, 260), Point(260, 70), Scalar(110, 220, 0), 2, 8);
-     line(image_s, Point(260, 70), Point(70, 70), Scalar(110, 220, 0), 2, 8);
-     Mat left(image_s, Rect(101, 101, s_r_m.width, s_r_m.height));
-     resize_image.copyTo(left);
-     imshow("Test", image_s);
-#endif
-
-     int y_min = 0, z_min = 0, y_max = sc_size - 30, z_max = sc_size - 30;
-     Mat three_d_pt = (cv::Mat_<double>(4, 1) << sc_size, 0, sc_size - 30, 1);
-
-     for (unsigned int i = 0; i <z_max; i++)
-    {
-         three_d_pt.at<double>(1, 0) = 0;
-
-         for (unsigned int j = 0; j < y_max; j++)
-        {
-             Mat temp = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
-             temp = three_d_pt;
-             //cout << "i=" << temp.at<double>(1,0)<< "j=" << temp.at<double>(2, 0) << endl;
-             temp.at<double>(1, 0) += 1;
-
-             cv::Point two_d_pt = transform(temp);
-             Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
-
-             orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-             //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-        }
-         three_d_pt.at<double>(2, 0) = three_d_pt.at<double>(2, 0) - 1;
-    }
-}
+*/
