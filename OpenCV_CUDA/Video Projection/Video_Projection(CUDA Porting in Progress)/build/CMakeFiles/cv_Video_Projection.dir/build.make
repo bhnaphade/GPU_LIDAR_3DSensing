@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection
+CMAKE_SOURCE_DIR = "/home/ubuntu/Video_Projection(CUDA Porting in Progress)"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build
+CMAKE_BINARY_DIR = "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cv_Video_Projection.dir/depend.make
@@ -54,17 +54,17 @@ include CMakeFiles/cv_Video_Projection.dir/flags.make
 
 CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o: CMakeFiles/cv_Video_Projection.dir/flags.make
 CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o: ../Video_Projection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build/CMakeFiles" $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o -c /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/Video_Projection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o -c "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/Video_Projection.cpp"
 
 CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/Video_Projection.cpp > CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/Video_Projection.cpp" > CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.i
 
 CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/Video_Projection.cpp -o CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/Video_Projection.cpp" -o CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.s
 
 CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o.requires:
 .PHONY : CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o.requires
@@ -142,6 +142,6 @@ CMakeFiles/cv_Video_Projection.dir/clean:
 .PHONY : CMakeFiles/cv_Video_Projection.dir/clean
 
 CMakeFiles/cv_Video_Projection.dir/depend:
-	cd /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build /home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/build/CMakeFiles/cv_Video_Projection.dir/DependInfo.cmake --color=$(COLOR)
+	cd "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/ubuntu/Video_Projection(CUDA Porting in Progress)" "/home/ubuntu/Video_Projection(CUDA Porting in Progress)" "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build" "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build" "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build/CMakeFiles/cv_Video_Projection.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/cv_Video_Projection.dir/depend
 

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/ubuntu/GPU_LIDAR_3DSensing/OpenCV/Video_Projection/Video_Projection.cpp
+/home/ubuntu/Video_Projection(CUDA Porting in Progress)/Video_Projection.cpp
 iostream
 -
 math.h
