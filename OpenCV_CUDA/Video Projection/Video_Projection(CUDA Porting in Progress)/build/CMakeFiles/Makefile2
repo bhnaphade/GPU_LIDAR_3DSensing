@@ -56,38 +56,38 @@ CMAKE_SOURCE_DIR = "/home/ubuntu/Video_Projection(CUDA Porting in Progress)"
 CMAKE_BINARY_DIR = "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build"
 
 #=============================================================================
-# Target rules for target CMakeFiles/cv_Video_Projection.dir
+# Target rules for target CMakeFiles/cv_Video_Projection_GPU.dir
 
 # All Build rule for target.
-CMakeFiles/cv_Video_Projection.dir/all:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/depend
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/build
+CMakeFiles/cv_Video_Projection_GPU.dir/all:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/depend
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build/CMakeFiles"  1
-	@echo "Built target cv_Video_Projection"
-.PHONY : CMakeFiles/cv_Video_Projection.dir/all
+	@echo "Built target cv_Video_Projection_GPU"
+.PHONY : CMakeFiles/cv_Video_Projection_GPU.dir/all
 
 # Include target in all.
-all: CMakeFiles/cv_Video_Projection.dir/all
+all: CMakeFiles/cv_Video_Projection_GPU.dir/all
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/cv_Video_Projection.dir/rule: cmake_check_build_system
+CMakeFiles/cv_Video_Projection_GPU.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build/CMakeFiles" 1
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cv_Video_Projection.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cv_Video_Projection_GPU.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build/CMakeFiles" 0
-.PHONY : CMakeFiles/cv_Video_Projection.dir/rule
+.PHONY : CMakeFiles/cv_Video_Projection_GPU.dir/rule
 
 # Convenience name for target.
-cv_Video_Projection: CMakeFiles/cv_Video_Projection.dir/rule
-.PHONY : cv_Video_Projection
+cv_Video_Projection_GPU: CMakeFiles/cv_Video_Projection_GPU.dir/rule
+.PHONY : cv_Video_Projection_GPU
 
 # clean rule for target.
-CMakeFiles/cv_Video_Projection.dir/clean:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/clean
-.PHONY : CMakeFiles/cv_Video_Projection.dir/clean
+CMakeFiles/cv_Video_Projection_GPU.dir/clean:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/clean
+.PHONY : CMakeFiles/cv_Video_Projection_GPU.dir/clean
 
 # clean rule for target.
-clean: CMakeFiles/cv_Video_Projection.dir/clean
+clean: CMakeFiles/cv_Video_Projection_GPU.dir/clean
 .PHONY : clean
 
 #=============================================================================

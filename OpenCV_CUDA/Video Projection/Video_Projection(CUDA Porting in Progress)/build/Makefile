@@ -102,41 +102,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cv_Video_Projection
+# Target rules for targets named cv_Video_Projection_GPU
 
 # Build rule for target.
-cv_Video_Projection: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cv_Video_Projection
-.PHONY : cv_Video_Projection
+cv_Video_Projection_GPU: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cv_Video_Projection_GPU
+.PHONY : cv_Video_Projection_GPU
 
 # fast build rule for target.
-cv_Video_Projection/fast:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/build
-.PHONY : cv_Video_Projection/fast
+cv_Video_Projection_GPU/fast:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/build
+.PHONY : cv_Video_Projection_GPU/fast
 
-Video_Projection.o: Video_Projection.cpp.o
-.PHONY : Video_Projection.o
+Video_Projection_GPU.o: Video_Projection_GPU.cpp.o
+.PHONY : Video_Projection_GPU.o
 
 # target to build an object file
-Video_Projection.cpp.o:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.o
-.PHONY : Video_Projection.cpp.o
+Video_Projection_GPU.cpp.o:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/Video_Projection_GPU.cpp.o
+.PHONY : Video_Projection_GPU.cpp.o
 
-Video_Projection.i: Video_Projection.cpp.i
-.PHONY : Video_Projection.i
+Video_Projection_GPU.i: Video_Projection_GPU.cpp.i
+.PHONY : Video_Projection_GPU.i
 
 # target to preprocess a source file
-Video_Projection.cpp.i:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.i
-.PHONY : Video_Projection.cpp.i
+Video_Projection_GPU.cpp.i:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/Video_Projection_GPU.cpp.i
+.PHONY : Video_Projection_GPU.cpp.i
 
-Video_Projection.s: Video_Projection.cpp.s
-.PHONY : Video_Projection.s
+Video_Projection_GPU.s: Video_Projection_GPU.cpp.s
+.PHONY : Video_Projection_GPU.s
 
 # target to generate assembly for a file
-Video_Projection.cpp.s:
-	$(MAKE) -f CMakeFiles/cv_Video_Projection.dir/build.make CMakeFiles/cv_Video_Projection.dir/Video_Projection.cpp.s
-.PHONY : Video_Projection.cpp.s
+Video_Projection_GPU.cpp.s:
+	$(MAKE) -f CMakeFiles/cv_Video_Projection_GPU.dir/build.make CMakeFiles/cv_Video_Projection_GPU.dir/Video_Projection_GPU.cpp.s
+.PHONY : Video_Projection_GPU.cpp.s
 
 # Help Target
 help:
@@ -144,12 +144,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... cv_Video_Projection"
+	@echo "... cv_Video_Projection_GPU"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Video_Projection.o"
-	@echo "... Video_Projection.i"
-	@echo "... Video_Projection.s"
+	@echo "... Video_Projection_GPU.o"
+	@echo "... Video_Projection_GPU.i"
+	@echo "... Video_Projection_GPU.s"
 .PHONY : help
 
 

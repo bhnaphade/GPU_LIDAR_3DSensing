@@ -116,7 +116,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Video_Projection
+CMAKE_PROJECT_NAME:STATIC=Video_Projection_GPU
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -266,6 +266,9 @@ CUDA_nppi_LIBRARY:FILEPATH=/usr/local/cuda-6.5/lib/libnppi.so
 //"npps" library
 CUDA_npps_LIBRARY:FILEPATH=/usr/local/cuda-6.5/lib/libnpps.so
 
+//Path to a library.
+GPUFunctions_LIBRARY:FILEPATH=/home/ubuntu/Video_Projection(CUDA Porting in Progress)/libcudaImageTransform.a
+
 //Path where debug 3rdparty OpenCV dependencies are located
 OpenCV_3RDPARTY_LIB_DIR_DBG:PATH=/usr/local/share/OpenCV/3rdparty/lib
 
@@ -284,10 +287,10 @@ OpenCV_LIB_DIR_DBG:PATH=
 OpenCV_LIB_DIR_OPT:PATH=
 
 //Value Computed by CMake
-Video_Projection_BINARY_DIR:STATIC=/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build
+Video_Projection_GPU_BINARY_DIR:STATIC=/home/ubuntu/Video_Projection(CUDA Porting in Progress)/build
 
 //Value Computed by CMake
-Video_Projection_SOURCE_DIR:STATIC=/home/ubuntu/Video_Projection(CUDA Porting in Progress)
+Video_Projection_GPU_SOURCE_DIR:STATIC=/home/ubuntu/Video_Projection(CUDA Porting in Progress)
 
 
 ########################
@@ -482,7 +485,7 @@ CUDA_parse_cubin:INTERNAL=/usr/share/cmake-2.8/Modules/FindCUDA/parse_cubin.cmak
 //Location of run_nvcc.cmake
 CUDA_run_nvcc:INTERNAL=/usr/share/cmake-2.8/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
-FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda-6.5][/usr/local/cuda-6.5/bin/nvcc][/usr/local/cuda-6.5/include][/usr/local/cuda-6.5/lib/libcudart.so][v6.5(6.5)]
+FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda-6.5][/usr/local/cuda-6.5/bin/nvcc][/usr/local/cuda-6.5/include][/usr/local/cuda-6.5/lib/libcudart.so][v6.5()]
 //ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_DBG
 OpenCV_3RDPARTY_LIB_DIR_DBG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OpenCV_3RDPARTY_LIB_DIR_OPT
