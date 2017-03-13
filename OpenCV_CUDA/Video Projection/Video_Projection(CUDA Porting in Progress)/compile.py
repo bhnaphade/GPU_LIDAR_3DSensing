@@ -6,13 +6,19 @@ import sys
 import shutil
 
 filename = os.path.abspath(__file__)
-#"/home/ubuntu/Desktop/Gest_Detect_GPU1/build"
 dir = os.path.dirname(filename)
 build = dir + "/build"
 print build
 if os.path.exists(build):
   shutil.rmtree(build)
 os.mkdir(build)
+
+dirContent = os.listdir(dir)
+for files in dirContent:
+    if files.endswith(".o"):
+        os.remove(dir + "/"+ files)
+    elif files.endswith(".a"):
+        os.remove(dir + "/"+ files)
 
 #Image = sys.argv[1]
 BUILD4 = "make"

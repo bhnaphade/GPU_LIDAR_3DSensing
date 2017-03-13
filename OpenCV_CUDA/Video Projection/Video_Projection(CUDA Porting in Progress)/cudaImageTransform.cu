@@ -79,7 +79,7 @@ cudaTransform(const float *transMat,int xValue, int yValue,const twoDCoordinates
     twoDPoint.y = (int)((float)planeDistance * matrixResult[1]/matrixResult[2]);
     twoDPoint.y += offset.y;
     
-    //twoDPoint.y = destImageHeight-twoDPoint.y;
+    twoDPoint.y = destImageHeight-twoDPoint.y;
             
     return twoDPoint;
 }
@@ -114,7 +114,7 @@ cudaGetTransformedCoordinates(unsigned char *src,
     
     if((xTid < threadLimits.x) && (yTid < threadLimits.y))
     {
-        srcColorLoc = (yTid * srcImageStep) + (3 * xTid);
+        srcColorLoc = ((srcImageHeight-yTid) * srcImageStep) + (3 * (srcImageWidth-xTid));
         
         transCoordinates = cudaTransform(transMat,xTid,yTid,offset,destImageHeight,
                                          constScreenCoordinate, projectionPlane,
@@ -125,10 +125,10 @@ cudaGetTransformedCoordinates(unsigned char *src,
         
         if((srcColorLoc < (srcImageBytes-2))&&(destColorLoc < (destImageBytes-2)))
         { 
-            if((xTid == 0) && (yTid==0))
+            /*if( ((xTid == 260-1) && (yTid==0)) )
             {
                 printf("xTid:%d yTid:%d Tx:%d Ty:%d destColorLoc:%d srcLoc:%d\n",xTid,yTid,transCoordinates.x,transCoordinates.y,destColorLoc,srcColorLoc);
-            }
+            }*/
             
             dest[destColorLoc]=src[srcColorLoc];
             dest[destColorLoc+1]=src[srcColorLoc+1];
@@ -160,9 +160,9 @@ cudaImageProjectioncaller(const cv::Mat& h_srcImage,
     const int destImageBytes = h_destImage.step * h_destImage.rows;
     const int transMatBytes = h_transMat.step * h_transMat.rows;
     
-    cout << "Offset :" << offset.x << " "<<offset.y << endl;
+    //cout << "Offset :" << offset.x << " "<<offset.y << endl;
     
-    cout << "Plane Distance: " << projPlaneDist << endl;
+    //cout << "Plane Distance: " << projPlaneDist << endl;
     
     /*static float* transMatPtr = NULL;
     if (transMatPtr == NULL)

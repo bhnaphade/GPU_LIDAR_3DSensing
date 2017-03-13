@@ -10,7 +10,8 @@
 #include <opencv2/core/cuda.hpp>
 #include "cudaImageTransform.hpp"
 
-#define cubeSize 230
+#define cubeSize    230
+#define DEBUG_CODE  0
 
 using std::cout;
 using std::endl;
@@ -42,7 +43,7 @@ Mat scr2 = (cv::Mat_<float>(4, 1) << scrSize, 0, scrSize - 30, 1);
 Mat scr3 = (cv::Mat_<float>(4, 1) << scrSize, scrSize, scrSize - 30, 1);
 Mat scr4 = (cv::Mat_<float>(4, 1) << scrSize, scrSize, 0, 1);
 
-Mat camPosition = (cv::Mat_<float>(3, 1) << 300, 300, 250);
+Mat camPosition = (cv::Mat_<float>(3, 1) << 350, 300, 250);
 
 Mat org = (cv::Mat_<float>(4, 1) << 0, 0, 0, 1);
 
@@ -84,9 +85,13 @@ int main()
     xOffset = preFinalImage.cols/2;
     yOffset = preFinalImage.rows/2;
     
-    Mat test = (cv::Mat_<float>(4, 1) << 260, 0, 0, 1);
-    cout << transform(test,700) << "Offset: "<< xOffset << " "<<yOffset << endl;
-
+    #if DEBUG_CODE
+    cout << transform(scr1,700) << endl;
+    cout << transform(scr2,700) << endl;
+    cout << transform(scr3,700) << endl;
+    cout << transform(scr4,700) << endl;
+    #endif//#if DEBUG_CODE
+    
     drawAxes(preFinalImage);
     drawCube(preFinalImage);
     drawScreen(preFinalImage);
@@ -124,25 +129,10 @@ int main()
         //imshow("Camera", frame); //show image on window named Camera
         
         pyrDown(frame, pyrDownImage, Size(frame.cols / 2, frame.rows / 2));
-        
-        //pyrDown(pyrDownImage, pyrDownImage, Size(pyrDownImage.cols / 2, pyrDownImage.rows / 2));
-        
-        //imshow("Pyr Down", pyrDownImage);
-         
-        //cout << dst.cols << "," << dst.rows << endl;
-         
-        //if (key == 'c')
-        {
-            //imshow("Captured", frame);
-            //resize(frame, resize_frame, Size(cubeSize, cubeSize), 0, 0, INTER_CUBIC);
-            // imshow("resized frame", dst);
-            //imageProjection(pyrDownImage, preFinalImage);
-            cudaImageProjection(pyrDownImage, preFinalImage);
-            //cv::flip(preFinalImage, finalImage, 0);
-            imshow("3D World Image", preFinalImage);
-            
-            //return dst;
-        }
+
+        cudaImageProjection(pyrDownImage, preFinalImage);
+        imshow("3D World Image", preFinalImage);
+
     }
     waitKey(0);
     return 0;
@@ -196,6 +186,13 @@ void drawScreen(Mat image)
     cv::Point2d sc2_2d = transform(scr2,imageHeight);
     cv::Point2d sc3_2d = transform(scr3,imageHeight);
     cv::Point2d sc4_2d = transform(scr4,imageHeight);
+    
+    #if DEBUG_CODE
+    cout << "Point 1" << sc1_2d << endl;
+    cout << "Point 2" << sc2_2d << endl;
+    cout << "Point 3" << sc3_2d << endl;
+    cout << "Point 4" << sc4_2d << endl;
+    #endif//#if DEBUG_CODE
 
     line(image, Point(sc1_2d.x, sc1_2d.y), Point(sc2_2d.x, sc2_2d.y), Scalar(110, 220, 0), 2, 8);
     line(image, Point(sc2_2d.x, sc2_2d.y), Point(sc3_2d.x, sc3_2d.y), Scalar(110, 220, 0), 2, 8);
@@ -223,7 +220,7 @@ cv::Point2d transform(Mat threeDMat, int imageHeight)
 void imageProjection(Mat resize_image, Mat orig_image)
 {
     int imageHeight = orig_image.rows;
-    Size s_r_m = resize_image.size();             //resize_image is a 3 channel image
+    Size s_r_m = resize_image.size();//resize_image is a 3 channel image
 
     int y_min = 0, z_min = 0, y_max = scrSize, z_max = scrSize - 30;
 
@@ -237,20 +234,14 @@ void imageProjection(Mat resize_image, Mat orig_image)
         {
             Mat temp = (cv::Mat_<float>(4, 1) << 0, 0, 0, 1);
             temp = three_d_pt;
-            //cout << "i=" << temp.at<float>(1,0)<< "j=" << temp.at<float>(2, 0) << endl;
+            
             temp.at<float>(1, 0) += 1;
 
             cv::Point two_d_pt = transform(temp,imageHeight);
-             
-            //transmformed_coordinates_file << two_d_pt.x <<endl;
-             
-            //transmformed_coordinates_file << two_d_pt.y <<endl;
 	     	
             Vec3b colour = resize_image.at<Vec3b>(Point(j, i));
 
             orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-            //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
-            //orig_image.at<Vec3b>(Point(two_d_pt.x, two_d_pt.y)) = colour;
         }
         three_d_pt.at<float>(2, 0) = three_d_pt.at<float>(2, 0) - 1;
     }
