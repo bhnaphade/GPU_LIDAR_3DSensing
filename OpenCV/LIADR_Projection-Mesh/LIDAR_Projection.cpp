@@ -3,7 +3,8 @@
 * Description  : Project RPLIDAR distance data in Cube			    *
 * Author       : Amit Pachore                                       *
 * Date         : Apr 23, 2017                                       *
-* Notes        : 													*
+* Notes        : This Program is just to create the mesh inside cube*
+*				 LIDAR Data is emulated by hardcoding in the program*
 *********************************************************************/
 
 #include <iostream> 
