@@ -1,1 +1,0 @@
-/media/ubuntu/SAMSUNG USB/Video_Projection_GPU/build/CMakeFiles/cv_Video_Projection_GPU.dir
