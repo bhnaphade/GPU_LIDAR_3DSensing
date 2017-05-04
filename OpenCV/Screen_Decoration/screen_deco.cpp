@@ -1,26 +1,25 @@
+/********************************************************************
+* Program Name : screen_deco.cpp                                    *
+* Description  : Decoration of colored patches on screen	    *
+* Author       : Anush Shankar                                      *
+* Date         : May 3, 2017                                        *
+* Notes        : The program decorates the screen with variable     *
+*                sized color patches                                *   
+*********************************************************************/
+
 #include <iostream> 
-
 #include <math.h>
-
 #include <opencv2/opencv.hpp>
-
 #include <opencv2/core/core.hpp>
-
 #include <opencv2/highgui/highgui.hpp>
 
-
-
 #define k 10
-
-
 
 using std::cout;
 
 using std::endl;
 
 using cv::Mat;
-
-
 
 using namespace cv;
 

@@ -1,3 +1,12 @@
+/********************************************************************
+* Program Name : Video_Projection.cpp                               *
+* Description  : Projection of video on screen                      *
+* Author       : Urvashi Agrawal                                    *
+* Date         : May 3, 2017                                        *
+* Notes        : This program captures video and projects it on     *
+*                the screen in non real time                        *
+*********************************************************************/
+
 #include <iostream> 
 #include <math.h>
 #include <string.h>

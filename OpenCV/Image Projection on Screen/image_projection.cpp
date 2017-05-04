@@ -1,3 +1,12 @@
+/********************************************************************
+* Program Name : image_projection.cpp                               *
+* Description  : Projection of Captured Image on Screen		    *	    *
+* Author       : Anush Shankar                                      *
+* Date         : May 3, 2017                                        *
+* Notes        : The program captures, resizes and projects image   *
+*                on screen                                          *
+*********************************************************************/
+
 #include <iostream> 
 #include <math.h>
 #include <opencv2/opencv.hpp>
