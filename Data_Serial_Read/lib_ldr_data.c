@@ -91,7 +91,7 @@ struct senData get_lidar_data()
   tcflush(fd, TCIFLUSH);
   read(fd, &buf, readSize);
 
-  /*Store LIDAr rediands from buffer */
+  /*Store LIDAr readings from buffer */
   sD.S0 = GET_DATA(buf[0],buf[1]);
   sD.S1 = GET_DATA(buf[2],buf[3]);
   sD.S2 = GET_DATA(buf[4],buf[5]);
