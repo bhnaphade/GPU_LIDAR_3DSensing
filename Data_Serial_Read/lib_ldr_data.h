@@ -1,13 +1,21 @@
+/********************************************************************
+* Program Name : lib_ldr_data.h                    
+* Description  : header file for structure definition for LIDAr reading   
+* Author       : Bhupendra Naphade                                       
+* Date         : May 01, 2017                                       
+* Notes        : 
+*********************************************************************/
+
 #ifndef lib_ldr_data_h__
 #define lib_ldr_data_h__
  
-       #include <sys/types.h>
-      #include <sys/stat.h>
-       #include <stdio.h>
-      #include <stdlib.h>
-        #include <string.h> 
-        #include <unistd.h>  /* UNIX Standard Definitions 	   */ 
-     #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> 
+#include <unistd.h>  /* UNIX Standard Definitions 	   */ 
+#include <string.h>
 #include <stdint.h> 
 
 
@@ -20,6 +28,6 @@
  uint16_t S3;
  };
  
- struct senData get_lidar_data();
+struct senData get_lidar_data();
  
 #endif  // lib_ldr_data_h__
