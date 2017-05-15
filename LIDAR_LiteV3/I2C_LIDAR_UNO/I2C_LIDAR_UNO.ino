@@ -1,14 +1,11 @@
-/* =============================================================================
-  LIDAR-Lite v2: Change the I2C address of multiple sensors with PWR_EN line
-
-  This example demonstrates how to chage the i2c address of multiple sensors.
-
-  The library is in BETA, so subscribe to the github repo to recieve updates, or
-  just check in periodically:
-  https://github.com/PulsedLight3D/LIDARLite_v2_Arduino_Library
-
-  To learn more read over lidarlite.cpp as each function is commented
-=========================================================================== */
+/********************************************************************
+* Program Name : I2C_LIDAR_UNO.ino                    
+* Description  : Get LIDAr readings using I2c bus    
+* Author       : Bhupendra Naphade                                       
+* Date         : May 01, 2017                                       
+* Notes        : Change the I2C address of multiple sensors with PWR_EN line and get the reading form the sensors	
+* Reference    : https://github.com/PulsedLight3D/LIDARLite_v2_Arduino_Library
+*********************************************************************/
 
 #include <Wire.h>
 #include <LIDARLite.h>
@@ -31,15 +28,14 @@ void setup() {
 }
 
 void loop() 
-{
-
- //Serial.print('A');
+{ 
     while(1)
-    {           while(Serial.read()!='S')
-    {   
-     digitalWrite(13, LOW); ;
-    }
-    digitalWrite(13, HIGH);
+    {           
+            while(Serial.read()!='S')
+            {   
+            digitalWrite(13, LOW); ;
+            }
+            digitalWrite(13, HIGH);
             sen0 =(uint16_t) myLidarLite.distance(true,true,addresses[0]);
             first_half0   = (sen0& 0xFF00) >> 8;   // >>>> >>>> 0001 0110
             sencond_half0 = sen0 & mask; // ____ ____ 0100 0111
