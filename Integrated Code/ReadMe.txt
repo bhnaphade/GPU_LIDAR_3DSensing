@@ -1,4 +1,9 @@
 System Requirements - OpenCv, CUDA, Application runs only on Jetson development platforms
+	Arduino Connected to Jetson TK1 on UART 1 (ttyTHS1)
+	Pin Connection - J3A1 Pin 2 GND  - Level Shifer GND
+			 J3A1 Pin 3 1.8V - Level Shifter Lo Voltage
+			 J3A2 Pin 65 Rx  - Level Shifter one pin corresponding to Arduino Tx 
+			 J3A2 Pin 65 Tx  - Level Shifter one pin corresponding to Arduino Rx
 
 Compilation - Run compile.py with "python compile.py" command
 	--> This will delete all old compiled files
